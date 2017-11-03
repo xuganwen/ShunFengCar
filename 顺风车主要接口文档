@@ -1,0 +1,363 @@
+			顺风车接口文档
+serverHost =http://www.shunfengche.com
+
+注册接口
+1.1.请求格式
+URL	http: ${serverHost}/
+
+支持格式	JOSN
+HTTP请求方式	Post
+是否登录验证	否
+请求数限制	未测试
+
+1.2请求参数及返回数据
+请求参数	参数类型	参数说明	是否必选	补充说明
+phoneNumber	String	注册手机号	True	
+msgCode	String 	验证码	True	短信验证码
+pwd	String	用户密码	True	
+返回结果示例
+{
+    "code": 200,
+    "data": [],
+    "msg": "success"
+}
+Code：服务端响应状态码
+Data：返回数据
+msg：状态码英文说明，success表示服务器响应正常，并成功返回数据，其它状态码说明有服务器端定义
+
+登录接口
+2.1.请求格式
+URL	http: ${serverHost}/
+
+支持格式	JOSN
+HTTP请求方式	Post
+是否登录验证	否
+请求数限制	未测试
+
+2.2请求参数及返回数据
+请求参数	参数类型	参数说明	是否必选	补充说明
+phoneNumber	String	注册手机号	True	
+pwd	String	用户密码	True	
+返回结果示例
+{
+    "code": 200,
+"data": [
+{
+  “userName”：”猪刚鬣”
+  “avator”：null
+  “sex”:”fale”
+  “appUserId”:10
+  “stars”:5.0
+  “car”:{
+      “carNumber”:
+      “carBond”:
+      “totalSeats”:
+}
+}
+],
+    "msg": "success"
+}
+
+发布行程
+3.1请求格式
+URL	http: ${serverHost}/
+
+支持格式	JOSN
+HTTP请求方式	Post
+是否登录验证	是
+请求数限制	未测试
+
+3.2请求参数及返回数据
+请求参数	参数类型	参数说明	是否必选	补充说明
+startLocation	String	起点	True	
+destination	String	目的地	True	
+date	String	发车日期	True	
+SupportSeats	int	可提供座位/需求座位	True	
+appUserId	int	发布者用户Id	True	
+isDriver	boolean 	是否是司机	True	司机和乘客都可以发布行程
+返回结果示例
+{
+    "code": 200,
+"data": [],
+    "msg": "success"
+}
+
+请求司机发布的行程列表
+4.1请求格式
+URL	http: ${serverHost}/
+
+支持格式	JOSN
+HTTP请求方式	get
+是否登录验证	否
+请求数限制	未测试
+
+
+4.2请求参数即返回数据
+请求参数	参数类型	参数说明	是否必选	补充说明
+startLocation	String	起点	True	
+destination	String	目的地	True	
+date	String	发车日期	False	
+requestType	Int	请求类型	true	0：表示请求开车，1：表示乘车（服务器端可以自己决定）
+返回结果示例
+{
+    "code": 200,
+"data": [
+{
+“appUserId”:10
+“startLocation”:”湖北麻城湖北大道110号”
+“destination”:”湖北武汉光谷芯中心”
+“carNumber”：”e123456”
+“carBond”:”广汽丰田”
+“supportSeats”:1
+“shareTakeUrl”:http://baseurl? startLocation=””&destination=””&requsttype=””
+“travelID”:11
+}
+],
+    "msg": "success"
+}
+额外返回数据说明：shareTakeUrl表示分享此条行程链接，其他用户可以通过此条链接直接进入此条行程详情，并方便加入行程。(以上值的格式只用作参考，开发团队可以自己商议),travelId表示单条行程的id
+
+
+
+
+5.  请求乘客发布的行程列表（为简化后台数据处理难度，这里分开写成司机和乘客两种行程请求）
+   5.1请求格式
+URL	http: ${serverHost}/
+
+支持格式	JOSN
+HTTP请求方式	get
+是否登录验证	否
+请求数限制	未测试
+
+   5.2请求参数及返回数据
+    
+请求参数	参数类型	参数说明	是否必选	补充说明
+startLocation	String	起点	True	
+destination	String	目的地	True	
+date	String	发车日期	False	
+requestType	Int	请求类型	true	0：表示请求开车，1：表示乘车（服务器端可以自己决定）
+返回结果示例
+{
+    "code": 200,
+"data": [
+{
+“appUserId”:10
+“startLocation”:”湖北麻城湖北大道110号”
+“destination”:”湖北武汉光谷芯中心”
+“carNumber”：null
+“carBond”:null
+“supportSeats”:1
+ “travelId”:
+}
+],
+    "msg": "success"
+}
+额外返回数据说明：shareTakeUrl（待添加功能）表示分享此条行程链接，其他用户可以通过此条链接直接进入此条行程详情，并方便加入行程。(以上值的格式只用作参考，开发团队可以自己商议)
+
+
+
+6. 成为司机
+     6.1请求格式
+URL	http: ${serverHost}/
+
+支持格式	JOSN
+HTTP请求方式	Post
+是否登录验证	是
+请求数限制	未测试
+
+     6.2请求参数及返回数据
+请求参数	参数类型	参数说明	是否必选	补充说明
+appUserID	Int 	用户id		
+carNumber	String	起点	True	
+carBond	String	目的地	True	
+carOwnerName	String	发车日期	true	
+carOwnerIDCard	String	驾驶人身份证号	true	0：表示请求开车，1：表示乘车（服务器端可以自己决定）
+driverCardNumber	String 	驾驶人驾驶证号	True	
+返回结果示例
+{
+    "code": 200,
+"data": 
+{
+ “message”:”审核通过，恭喜您成为平台司机”
+}
+,
+    "msg": "success"
+}
+
+新注册的司机具有满级信用分5分，在数据库的设计时不要忽略
+
+
+
+7.邀请加入行程
+     7.1请求格式
+URL	http: ${serverHost}/
+
+支持格式	JOSN
+HTTP请求方式	Post
+是否登录验证	是
+请求数限制	未测试
+
+     7.2请求参数及返回数据
+请求参数	参数类型	参数说明	是否必选	补充说明
+appUserID	Int 	邀请者id	True	
+InvitedId	Int	被邀请者id		
+travelId	int	行程ID	True	
+返回结果示例
+{
+    "code": 200,
+"data": 
+{
+  “message”:”已发出邀请”
+  “acceptType”:1
+},
+    "msg": "success"
+}
+“message”为一种等待响应状态下的返回信息，后台需要根据当前行程的状态返回对应的信息，比如行程人数已满或者行程已经由发布者取消
+
+   “acceptType”表示针对此travelId发出的加入行为由司机和乘客所做出的操作行为返回数据，0表示由乘客邀请乘客，1表示由司机邀请乘客,司机默认同意，2表示乘客自己主动加入，乘客默认同意，
+
+
+8．乘客主动加入行程
+8.1请求格式
+
+
+URL	http: ${serverHost}/
+
+支持格式	JOSN
+HTTP请求方式	Post
+是否登录验证	是
+请求数限制	未测试
+
+8.2请求参数及返回数据
+请求参数	参数类型	参数说明	是否必选	补充说明
+appUserID	Int 	用户id	True	
+travelId	int	行程ID	True	
+acceptType	int	表示由谁发起的请求	True	1表示司机同意发起,2表示乘客同意发起
+返回结果示例
+{
+    "code": 200,
+"data": {
+    “message”:”已发出加入请求，请等待司机同意”
+    “acceptType”:2
+},
+    "msg": "success"
+}
+“message”为一种等待响应状态下的返回信息，后台需要根据当前行程的状态返回对应的信息，比如行程人数已满或者行程已经由发布者取消
+
+
+
+
+9. 取消行程
+    9.1请求格式
+
+
+URL	http: ${serverHost}/
+
+支持格式	JOSN
+HTTP请求方式	Post
+是否登录验证	是
+请求数限制	未测试
+
+    9.2请求参数及返回数据
+请求参数	参数类型	参数说明	是否必选	补充说明
+appUserID	Int 	用户id	True	
+travelId	int	行程ID	True	
+RequestType	Int 	请求方式	True	发送请求的客户的类型
+返回结果示例
+{
+    "code": 200,
+"data": {
+    “message”:”已取消行程，并扣除评分1分”
+},
+    "msg": "success"
+}
+“message”为一种直接返回信息，后台需要根据当前行程发布的时间间隔来反馈不同的结果，如果发布时间间隔超过1h或者30min(后面商量)，将会扣除该司机的个人信用评分1分（总分5分制，乘客取消，扣除乘客0.5分，当司机或者乘客出现0分时，直接注销该账户），否则不予处罚，取消后删除数据前应该后台推送消息至已参与行程的客户端,如果有资金支持，可以允许短信推送。（后面考虑是否会采取补偿金形式，听群众反馈意见决定）
+
+
+
+
+
+10.改进建议
+     10.1请求格式
+URL	http: ${serverHost}/
+
+支持格式	JOSN
+HTTP请求方式	Post
+是否登录验证	是
+请求数限制	未测试
+
+     10.2请求参数及返回数据
+请求参数	参数类型	参数说明	是否必选	补充说明
+appUserID	Int 	用户id	True	
+adviceContent	string	建议内容	True	
+返回结果示例
+{
+    "code": 200,
+"data": {
+    },
+"msg": "success"
+}
+
+
+
+11.完成行程
+      11.1请求格式
+URL	http: ${serverHost}/
+
+支持格式	JOSN
+HTTP请求方式	Post
+是否登录验证	是
+请求数限制	未测试
+
+      11.2请求参数及返回数据
+请求参数	参数类型	参数说明	是否必选	补充说明
+appUserID	Int 	用户id	True	
+travelId	int	行程ID	True	
+返回结果示例
+{
+    "code": 200,
+"data": {
+    “appUserID”:
+    “travelId”:
+    “star”:
+    “endTime”:
+    
+},
+    "msg": "success"
+}
+“message”为一种直接返回信息，后台需要根据当前行程发布的时间间隔来反馈不同的结果，如果发布时间间隔超过1h或者30min(后面商量)，将会扣除该司机的个人信用评分1分（总分5分制，乘客取消，扣除乘客0.5分，当司机或者乘客出现0分时，直接注销该账户），否则不予处罚，取消后删除数据前应该后台推送消息至已参与行程的客户端,如果有资金支持，可以允许短信推送。（后面考虑是否会采取补偿金形式，听群众反馈意见决定）
+
+
+
+12.对司机评价
+    12.1请求格式
+URL	http: ${serverHost}/
+
+支持格式	JOSN
+HTTP请求方式	Post
+是否登录验证	是
+请求数限制	未测试
+
+   
+    12.2请求参数及返回数据
+
+请求参数	参数类型	参数说明	是否必选	补充说明
+appUserID	Int 	用户id	True	
+travelId	int	行程ID	True	
+driverID	int	司机的用户id	true	
+返回结果示例
+{
+    "code": 200,
+"data": {
+    “appUserID”:
+    “travelId”:
+    “star”:对完成行程的乘客奖励分（后面这一块全部与应用宝信用分对接）
+    “endTime”:
+ 
+},
+    "msg": "success"
+}
+
+
+
+
